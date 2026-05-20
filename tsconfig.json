@@ -1,34 +1,17 @@
 {
-    "compilerOptions": {
-      "target": "es2016",
-      "module": "commonjs",
-      "declaration": true,
-      "declarationMap": false,
-      "sourceMap": true,
-      "outDir": "./outputs/",
-      "inlineSourceMap": false,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "strict": true,
-      "noImplicitAny": true,
-      "strictNullChecks": true,
-      "strictFunctionTypes": true,
-      "strictPropertyInitialization": true,
-      "noImplicitThis": true,
-      "useUnknownInCatchVariables": true,
-      "alwaysStrict": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "noImplicitReturns": true,
-      "noFallthroughCasesInSwitch": true,
-      "noImplicitOverride": true,
-      "noPropertyAccessFromIndexSignature": true,
-      "allowUnreachableCode": false,
-      "skipLibCheck": true,
-    },
-    "exclude": [
-      "node_modules",
-      "outputs",
-    ]
-  }
-  
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "strict": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+
+    "moduleResolution": "Bundler",
+
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "declarationMap": true,
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["sources", "tests"]
+}

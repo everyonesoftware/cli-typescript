@@ -1,5 +1,7 @@
-import { CharacterWriteStream, ConsoleCharacterWriteStream, getGreeting } from "./";
+import { CharacterWriteStream, CurrentProcess } from "@everyonesoftware/common-typescript";
 
-const writeStream: CharacterWriteStream = ConsoleCharacterWriteStream.create();
-
-writeStream.writeLine(getGreeting());
+CurrentProcess.run(async (process: CurrentProcess) =>
+{
+    const output: CharacterWriteStream = process.getOutputWriteStream();
+    await output.writeLine("Hello World!");
+});
