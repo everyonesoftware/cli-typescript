@@ -1,0 +1,12 @@
+{
+    "all": true,
+    "src": [
+        "sources"
+    ],
+    "temp-directory": "coverage/temp",
+    "report-dir": "coverage",
+    "reporter": [
+        "lcov",
+        "html"
+    ]
+}
