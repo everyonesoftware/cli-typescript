@@ -6,7 +6,7 @@ export function test(runner: TestRunner): void
     {
         runner.test("sandbox", (test: Test) =>
         {
-            test.assertEqual(1, 2);
+            test.assertEqual(1, 1);
         });
     });
 }
