@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { CharacterWriteStream, CommandLineCommand, CurrentProcess, join, CommandLineParameter } from "@everyonesoftware/common";
 
 function addEchoCommand(parent: CommandLineCommand, output: CharacterWriteStream): void
