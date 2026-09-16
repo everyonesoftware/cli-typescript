@@ -1,9 +1,12 @@
 {
     "name": "@everyonesoftware/cli",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "The CLI for everyonesoftware.",
     "repository": {
-        "url": "https://github.com/everyonesoftware/cli-typescript"
+        "url": "git+https://github.com/everyonesoftware/cli-typescript.git"
+    },
+    "publishConfig": {
+        "access": "public"
     },
     "author": "everyonesoftware",
     "license": "ISC",
