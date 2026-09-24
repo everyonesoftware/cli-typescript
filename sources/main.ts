@@ -25,8 +25,9 @@ function addBuildCommand(parent: CommandLineCommand): void
     {
         return new Promise((resolve, reject) =>
         {
-            const process = spawn("npm", ["run", "build"], {
+            const process = spawn("npm run build", {
                 stdio: "inherit",
+                shell: true,
             });
             process.once("error", reject);
             process.once("exit", (code: number | null, signal: NodeJS.Signals | null) =>
@@ -58,8 +59,9 @@ function addTestCommand(parent: CommandLineCommand): void
     {
         return new Promise((resolve, reject) =>
         {
-            const process = spawn("npm", ["test"], {
+            const process = spawn("npm test", {
                 stdio: "inherit",
+                shell: true,
             });
             process.once("error", reject);
             process.once("exit", (code: number | null, signal: NodeJS.Signals | null) =>

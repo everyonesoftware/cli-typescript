@@ -1,6 +1,6 @@
 {
     "name": "@everyonesoftware/cli",
-    "version": "5.0.0",
+    "version": "6.0.0",
     "description": "The CLI for everyonesoftware.",
     "repository": {
         "url": "git+https://github.com/everyonesoftware/cli-typescript.git"
