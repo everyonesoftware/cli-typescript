@@ -1,6 +1,6 @@
 {
     "name": "@everyonesoftware/cli",
-    "version": "6.0.0",
+    "version": "7.0.0",
     "description": "The CLI for everyonesoftware.",
     "repository": {
         "url": "git+https://github.com/everyonesoftware/cli-typescript.git"
@@ -39,13 +39,11 @@
         "typescript": "^7.0.2"
     },
     "scripts": {
-        "build": "npm run lint && npm run fix-imports && tsc",
+        "build": "npm run lint && e1 fix-imports && tsc",
         "lint": "oxlint",
         "clean": "rimraf coverage outputs",
         "test-only": "c8 node -r source-map-support/register outputs/tests/tests.js",
-        "test": "npm run build && npm run test-only",
-        "fix-imports": "tsx scripts/fix-imports.ts",
-        "cli": "npm run build && node outputs/sources/main.js"
+        "test": "npm run build && npm run test-only"
     },
     "allowScripts": {
         "esbuild@0.28.2": true

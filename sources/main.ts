@@ -1,86 +1,32 @@
 #!/usr/bin/env node
 
-import { CharacterWriteStream, CommandLineCommand, CurrentProcess, join, CommandLineParameter, isUndefinedOrNull, NotFoundError } from "@everyonesoftware/common";
-import { spawn } from "node:child_process";
+import { CharacterWriteStream, CommandLineCommand, CurrentProcess, join, CommandLineParameter, PreCondition } from "@everyonesoftware/common";
+import { ProcessRunner } from "./ProcessRunner.js";
+import { RealProcessRunner } from "./RealProcessRunner.js";
+import { addFixImportsCommand } from "./FixImports.js";
 
-class ProcessTerminatedError extends Error
+function addBuildCommand(parent: CommandLineCommand, processRunner: ProcessRunner): void
 {
-    public readonly signal: NodeJS.Signals;
+    PreCondition.assertNotUndefinedAndNotNull(parent, "parent");
+    PreCondition.assertNotUndefinedAndNotNull(processRunner, "processRunner");
 
-    public constructor(signal: NodeJS.Signals)
-    {
-        super(`Process terminated by signal: ${signal}`);
-
-        this.signal = signal;
-    }
-}
-
-function addBuildCommand(parent: CommandLineCommand): void
-{
     const buildCommand: CommandLineCommand = parent.addCommand({
         name: "build",
         description: "Build the software project that contains the current folder.",
     });
-    buildCommand.setAction(() =>
-    {
-        return new Promise((resolve, reject) =>
-        {
-            const process = spawn("npm run build", {
-                stdio: "inherit",
-                shell: true,
-            });
-            process.once("error", reject);
-            process.once("exit", (code: number | null, signal: NodeJS.Signals | null) =>
-            {
-                if (!isUndefinedOrNull(signal))
-                {
-                    reject(new ProcessTerminatedError(signal));
-                }
-                else if (isUndefinedOrNull(code))
-                {
-                    reject(new NotFoundError(`Neither a code or signal was provided when the process ended.`));
-                }
-                else
-                {
-                    resolve(code);
-                }
-            });
-        });
-    });
+    buildCommand.setAction(() => processRunner.start("npm run build"));
 }
 
-function addTestCommand(parent: CommandLineCommand): void
+function addTestCommand(parent: CommandLineCommand, processRunner: ProcessRunner): void
 {
-    const buildCommand: CommandLineCommand = parent.addCommand({
+    PreCondition.assertNotUndefinedAndNotNull(parent, "parent");
+    PreCondition.assertNotUndefinedAndNotNull(processRunner, "processRunner");
+
+    const testCommand: CommandLineCommand = parent.addCommand({
         name: "test",
         description: "Test the software project that contains the current folder.",
     });
-    buildCommand.setAction(() =>
-    {
-        return new Promise((resolve, reject) =>
-        {
-            const process = spawn("npm test", {
-                stdio: "inherit",
-                shell: true,
-            });
-            process.once("error", reject);
-            process.once("exit", (code: number | null, signal: NodeJS.Signals | null) =>
-            {
-                if (!isUndefinedOrNull(signal))
-                {
-                    reject(new ProcessTerminatedError(signal));
-                }
-                else if (isUndefinedOrNull(code))
-                {
-                    reject(new NotFoundError(`Neither a code or signal was provided when the process ended.`));
-                }
-                else
-                {
-                    resolve(code);
-                }
-            });
-        });
-    });
+    testCommand.setAction(() => processRunner.start("npm test"));
 }
 
 function addEchoCommand(parent: CommandLineCommand, output: CharacterWriteStream): void
@@ -111,6 +57,7 @@ function addEchoCommand(parent: CommandLineCommand, output: CharacterWriteStream
 CurrentProcess.run(async (process: CurrentProcess) =>
 {
     const output: CharacterWriteStream = process.getOutputWriteStream();
+    const processRunner: ProcessRunner = RealProcessRunner.create();
 
     const command: CommandLineCommand = CommandLineCommand.create({
         name: "everyone",
@@ -121,8 +68,9 @@ CurrentProcess.run(async (process: CurrentProcess) =>
     });
 
     addEchoCommand(command, output);
-    addBuildCommand(command);
-    addTestCommand(command);
+    addBuildCommand(command, processRunner);
+    addTestCommand(command, processRunner);
+    addFixImportsCommand(command, output);
 
     return await command.run();
 });
