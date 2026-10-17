@@ -1,6 +1,6 @@
 {
     "name": "@everyonesoftware/cli",
-    "version": "8.0.0",
+    "version": "9.0.0",
     "description": "The CLI for everyonesoftware.",
     "repository": {
         "url": "git+https://github.com/everyonesoftware/cli-typescript.git"
@@ -25,7 +25,7 @@
         "README.md"
     ],
     "dependencies": {
-        "@everyonesoftware/common": "56.0.0"
+        "@everyonesoftware/common": "57.0.0"
     },
     "devDependencies": {
         "@types/luxon": "^3.7.2",
