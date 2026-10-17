@@ -39,7 +39,7 @@
         "typescript": "^7.0.2"
     },
     "scripts": {
-        "build": "npm run lint && e1 fix-imports && tsc",
+        "build": "npm run lint && tsc",
         "lint": "oxlint",
         "clean": "rimraf coverage outputs",
         "test-only": "c8 node -r source-map-support/register outputs/tests/tests.js",
