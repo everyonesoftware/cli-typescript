@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install E1 CLI
+        run: npm install -g @everyonesoftware/cli
+
       - name: Build
         run: npm run build
 
