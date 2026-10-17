@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { CharacterWriteStream, CommandLineCommand, CurrentProcess, join, CommandLineParameter, PreCondition } from "@everyonesoftware/common";
+import { CharacterWriteStream, CommandLineCommand, CurrentProcess, join, CommandLineParameter, PreCondition, Folder, escapeAndQuote } from "@everyonesoftware/common";
 import { ProcessRunner } from "./ProcessRunner.js";
 import { RealProcessRunner } from "./RealProcessRunner.js";
 import { addFixImportsCommand } from "./FixImports.js";
@@ -15,6 +15,32 @@ function addBuildCommand(parent: CommandLineCommand, processRunner: ProcessRunne
         description: "Build the software project that contains the current folder.",
     });
     buildCommand.setAction(() => processRunner.start("npm run build"));
+}
+
+function addCleanCommand(parent: CommandLineCommand, output: CharacterWriteStream, currentFolder: Folder): void
+{
+    PreCondition.assertNotUndefinedAndNotNull(parent, "parent");
+    PreCondition.assertNotUndefinedAndNotNull(output, "output");
+    PreCondition.assertNotUndefinedAndNotNull(currentFolder, "currentFolder");
+
+    const cleanCommand: CommandLineCommand = parent.addCommand({
+        name: "clean",
+        description: "Clean the current project's output folders.",
+    });
+    cleanCommand.setAction(async () =>
+    {
+        const outputsFolder: Folder = currentFolder.getFolder("outputs").await();
+        if (!await outputsFolder.exists())
+        {
+            await output.writeLine("Nothing to clean.");
+        }
+        else
+        {
+            await output.writeLine(`Deleting ${escapeAndQuote(outputsFolder.getName())} folder...`);
+            await outputsFolder.delete();
+            await output.writeLine("Done");
+        }
+    });
 }
 
 function addTestCommand(parent: CommandLineCommand, processRunner: ProcessRunner): void
@@ -58,6 +84,7 @@ CurrentProcess.run(async (process: CurrentProcess) =>
 {
     const output: CharacterWriteStream = process.getOutputWriteStream();
     const processRunner: ProcessRunner = RealProcessRunner.create();
+    const currentFolder: Folder = process.getCurrentFolder();
 
     const command: CommandLineCommand = CommandLineCommand.create({
         name: "everyone",
@@ -69,6 +96,7 @@ CurrentProcess.run(async (process: CurrentProcess) =>
 
     addEchoCommand(command, output);
     addBuildCommand(command, processRunner);
+    addCleanCommand(command, output, currentFolder);
     addTestCommand(command, processRunner);
     addFixImportsCommand(command, output);
 
